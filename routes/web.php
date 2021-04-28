@@ -1,57 +1,36 @@
 <?php
 
-use App\Cat;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/cats', function() {
-    $cats = Cat::all();
+// 🔍 Redirects '/' to '/cats'
+Route::redirect('/', '/cats');
 
-    return view('cats', [ 'cats' => $cats ]);
-});
+/***************
+ \
+ \ 🎩 In a general CRUDful application, there are 7 general actions to use from
+ \
+ \ Index            GET             /cats
+ \ Create           GET             /cats/create
+ \ Insert           POST            /cats
+ \ Show             GET             /cats/{id} 📝 Just to note: Our app does not utilize show!
+ \ Edit             GET             /cats/{id}/edit
+ \ Update           PUT             /cats/{id}
+ \ Delete           DELETE          /cats/{id}
+ \ 
+ **************/
 
-// Show Create Form
-Route::get('/cats/create', function() {
-    return view('cats-create');
-});
+/*
+Route::get('/cats',             'CatController@index');
+Route::get('/cats/create',      'CatController@create');
+Route::post('/cats',            'CatController@store');
+Route::get('/cats/{id}',        'CatController@show');
+Route::get('/cats/{id}/edit',   'CatController@edit');
+Route::put('/cats/{id}',        'CatController@update');
+Route::delete('/cats/{id}',     'CatController@delete');
+*/
 
-// Process form
-Route::post('/cats', function(Request $request) {
-    ddd(Cat::create([
-        'name' => $request->name,
-        'breed' => $request->breed,
-        'age' => $request->age,
-    ]));
-});
+// OR
 
-// Route::get('/cats/{id}', function($id) {
-//     $cat = Cat::find($id);
-
-//     return view('cats-show',
-//         [ 'cat' => $cat ]
-//     );
-// });
-
-Route::get('/cats/{id}/edit', function($id) {
-    $cat = Cat::find($id);
-
-    return view('cats-edit',
-        [ 'cat' => $cat ]
-    );
-});
-
-Route::put('/cats/{id}', function(Request $request, $id) {
-    Cat::find($id)->update([
-        'name' => $request->name,
-        'breed' => $request->breed,
-        'age' => $request->age,
-    ]);
-    
-    return redirect("/cats/$id/edit");
-});
-
-Route::delete('/cats/{id}', function($id) {
-    Cat::find($id)->delete();
-    
-    return redirect('/cats');
-});
+Route::resource('cats', 'CatController');
+// Because imagine if there's 10++ models, with middlewares, etc
+// 🔗 https://laravel.com/docs/6.x/controllers#resource-controllers

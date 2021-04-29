@@ -1,2 +1,2 @@
-# amazing-first-app
+# crudful-cats
  Laravel 7 CRUD showcase
